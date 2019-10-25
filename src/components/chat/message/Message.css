@@ -1,0 +1,20 @@
+.container-send-message {
+  width: 100%;
+  display: inline-block;
+}
+.send-body {
+  background-color: #C2E4F7;
+  padding: 10px 15px;
+  border-radius: 20px;
+  max-width: 216px;
+  text-align: left;
+  word-wrap: break-word;
+  margin: 0px;
+  float: right;
+}
+
+@media screen and (min-width: 600px) {
+  .send-body {
+    max-width: 300px
+  }
+}

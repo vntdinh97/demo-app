@@ -1,0 +1,100 @@
+/* trang chu */
+
+body {
+  background-color: #E9EBEE;
+}
+
+/* Navigation */
+
+#navbar {
+  height: 45px;
+  background-color: #333;
+  z-index: 3;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: block;
+  transition: top 0.3s;
+}
+
+@media (min-width: 1200px) {
+  #inputSearch {
+    width: 500px;
+  }
+}
+
+/* side bar left */
+
+/* Contend */
+
+/* mobile footer */
+
+#mobileFooter {
+  background-color: #ffffff;
+  position: fixed;
+  bottom: 0;
+  z-index: 1;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100%;
+}
+
+/* user online */
+
+#userOnline {
+  height: 100%;
+  width: 200px;
+  position: fixed;
+  right: 0px;
+  top: 45px;
+  border-left: 1px solid #dee2e6!important;
+  background-color: #E9EBEE;
+}
+
+/* side bar right */
+
+.col.d-xl-flex.justify-content-xl-center a {
+  /*color: #606770;*/
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  /*color: #212529;*/
+}
+
+.col.d-xl-flex.justify-content-xl-center a:hover {
+  background-color: #F7F7F7;
+  text-decoration: none;
+}
+
+.mobileMenu {
+  width: 100%;
+}
+
+.mobileMenu a {
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid #F7F7F7;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  color: #212529;
+}
+
+.mobileMenu a i {
+  padding-right: 15px;
+  color: #ff7d01;
+}
+
+/* css trang su kien */
+
+.sk a {
+  display: block;
+  border-bottom: 1px solid #F7F7F7;
+  padding: 5px;
+}
+
+.sk a:hover {
+  background-color: #F7F7F7;
+  text-decoration: none;
+}
+

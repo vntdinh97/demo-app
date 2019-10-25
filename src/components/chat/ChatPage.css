@@ -1,0 +1,15 @@
+.a {
+  padding: 0px 5px;
+  font-size: 20px;
+}
+
+.input-chat {
+  border: 0px;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  background-color: #e9ecef;
+}
+
+.information-panel {
+    padding: 20px 0 10px;
+}
