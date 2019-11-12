@@ -8,3 +8,16 @@ export function makeID(length) {
   }
   return result;
 }
+
+export function getID(roomID) {
+  return roomID.replace(localStorage.getItem("userId"), "");
+}
+
+export function isUrl(s) {
+  var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+  return regexp.test(s);
+}
+
+export function getTimestamp() {
+  return new Date().getTime();
+}

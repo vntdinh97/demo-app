@@ -6,6 +6,7 @@ import Message from "../message/Message";
 import { config } from "../../../constants/config";
 import Socket from "../../../services/WebSocket";
 import { Container, Row, Col, Image } from "react-bootstrap";
+import { markAsRead } from "../../../services/RocketWebService";
 
 var socket = new Socket();
 export default class ChatContent extends Component {
@@ -26,6 +27,7 @@ export default class ChatContent extends Component {
     };
     socket.api.send(JSON.stringify(createRoomRequest));
 
+    // handle messages received from server
     socket.api.addEventListener("message", e => {
       var res = JSON.parse(e.data);
 
@@ -45,11 +47,13 @@ export default class ChatContent extends Component {
         };
         socket.api.send(JSON.stringify(loadHistory));
         socket.api.send(JSON.stringify(streamRoomMessage));
+        markAsRead(res.result.rid);
         this.setState({
           roomId: res.result.rid
         });
       }
     });
+    socket.readMessage(this.state.roomId);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -66,11 +70,13 @@ export default class ChatContent extends Component {
 
       //Load message history
       if (res.id === `loadHistory${localStorage.getItem("userId")}`) {
+        console.log(res);
         var messages = [];
         res.result.messages.forEach(msg => {
           messages.unshift({
             msg: msg.msg,
-            owner: msg.u.username
+            owner: msg.u.username,
+            attachment: msg.attachments
           });
         });
         this.setState({
@@ -80,11 +86,14 @@ export default class ChatContent extends Component {
 
       //handle rereiving messages
       if (res.msg === "changed" && res.collection === "stream-room-messages") {
-        var msg = res.fields.args[0].msg;
-        var owner = res.fields.args[0].u.username;
-        var messages = this.state.msg;
-        messages.push({ msg, owner });
-        this.setState({ msg: messages });
+        if (res.fields.args[0].rid === this.state.roomId) {
+          var msg = res.fields.args[0].msg;
+          var owner = res.fields.args[0].u.username;
+          var attachment = res.fields.args[0].attachments;
+          let messages = this.state.msg;
+          messages.push({ msg, owner, attachment });
+          this.setState({ msg: messages });
+        }
       }
     });
   }
@@ -123,10 +132,11 @@ export default class ChatContent extends Component {
                 height: "100%"
               }}
             >
-              <div style={{ overflowY: "scroll", height: "500px" }}>
+              <div style={{ overflowY: "scroll", height: "450px" }}>
                 {this.state.msg.map((msg, index) => {
                   return (
                     <Message
+                      attachment = {msg.attachment}
                       msg={msg.msg}
                       key={index}
                       owner={msg.owner}
@@ -223,7 +233,7 @@ export default class ChatContent extends Component {
                     </div>
                     <div id="collapse4" class="panel-collapse collapse in">
                       <div class="panel-body" style = {{marginTop: "20px"}}>
-                        <Container>
+                        {/* <Container>
                           <Row>
                             <Col xs={6} md={4}>
                               <Image
@@ -250,7 +260,7 @@ export default class ChatContent extends Component {
                               />
                             </Col>
                           </Row>
-                        </Container>
+                        </Container> */}
                       </div>
                     </div>
                   </div>

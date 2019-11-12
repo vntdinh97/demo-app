@@ -3,13 +3,8 @@ import React, { PureComponent } from "react";
 import { config } from "../../../constants/config";
 export default class Person extends PureComponent {
   render() {
+    console.log(this.props.username + "\t" + this.props.seen);
     const avt = `${config.AVATAR_SERVER}/${this.props.username}`;
-    const rdUnreadMsg =
-      this.props.unreadMsg !== 0 ? (
-        <span class="badge badge-pill badge-primary">
-          {this.props.unreadMsg}
-        </span>
-      ) : null;
     return (
       <div>
         <div class="float-left" style={{ width: "90%", marginBottom: "10px" }}>
@@ -19,7 +14,7 @@ export default class Person extends PureComponent {
             style={{ width: "15%", filter: "blur(0px)" }}
           />
           <div class="float-left" style={{ paddingLeft: "10px", width: "85%" }}>
-            <h1 style={{ fontSize: "14px", marginBottom: "0px" }}>
+            <h1 style={{ fontSize: "14px", marginBottom: "0px", color: this.props.seen ? "black" : "red"}}>
               {this.props.name}
             </h1>
             <div
@@ -33,7 +28,8 @@ export default class Person extends PureComponent {
                   fontSize: "14px",
                   textOverflow: "clip",
                   whiteSpace: "nowrap",
-                  overflowX: "hidden"
+                  overflowX: "hidden",
+                  fontWeight: this.props.seen ? "normal" : "900"
                 }}
               >
                 {this.props.lastMessage}
@@ -48,7 +44,6 @@ export default class Person extends PureComponent {
             </div>
           </div>
         </div>
-        {rdUnreadMsg}
         <div class="float-right" style={{ width: "10%" }}>
           <i
             class="la la-user"

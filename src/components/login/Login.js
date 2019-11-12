@@ -2,11 +2,12 @@
 import React, { Component } from "react";
 import "./main.css";
 import "./util.css";
-import Axios from "axios";
-import { config } from "../../constants/config";
+import {sha256} from 'js-sha256';
 import Socket from '../../services/WebSocket';
+import { login as HRMSLogin } from "../../services/HRMSWebService";
+import { register } from "../../services/RocketWebService";
 
-
+var socket = new Socket();
 export default class Login extends Component {
   constructor(props) {
     super(props);
@@ -25,31 +26,40 @@ export default class Login extends Component {
 
   async handleLogin(event) {
     event.preventDefault();
-    await Axios({
-      method: "POST",
-      url: `${config.RESTFUL_API_SERVER}/login`,
-      data: {
-        user: this.state.username,
-        password: this.state.password
-      },
-      headers: {
-        "Content-type": "application/json"
-      }
+    let data;
+    HRMSLogin(this.state.username,this.state.password).then(res => {
+      data = res.data;
+      console.log(data);
+      socket.login(sha256(data.user));
+    }).catch(err => {
+      console.log(err);
+      alert("Wrong password!");
     })
-      .then(res => {
-        localStorage.setItem("userId", res.data.data.userId);
-        localStorage.setItem("authToken", res.data.data.authToken);
-        localStorage.setItem("username",this.state.username);
-        alert("Login successfully!");
-        localStorage.setItem("loggedIn", true);
-        
-        var socket = new Socket();
+      socket.api.addEventListener("message", (e) => {
+        var response = JSON.parse(e.data);
+        if (response.msg === "result" && response.error !== undefined && response.error.error === 403) {
+          var body = {
+            username: data.user,
+            email:`${data.user}@example.com`,
+            password:this.state.password, 
+            name: data.hoten === null ? data.user : data.hoten
+          }
+          register(body).then(() => {
+          }).catch(err => {
+            console.log(err);
+          });
+          socket.login(sha256(data.user));
+        }
 
-        this.props.history.push("/chat");
+        if (response.msg === "result" && response.id === "login" && response.error === undefined){
+          localStorage.setItem("userId",response.result.id);
+          localStorage.setItem("authToken",response.result.token)
+          this.props.history.push("/chat");
+        }
+
       })
-      .catch(err => {
-        alert(err);
-      });
+      
+      // this.props.history.push("/chat");
   }
 
   render() {
